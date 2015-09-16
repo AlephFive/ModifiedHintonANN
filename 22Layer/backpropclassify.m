@@ -1,0 +1,333 @@
+% Version 1.000
+%
+% Code provided by Ruslan Salakhutdinov and Geoff Hinton
+%
+% Permission is granted for anyone to copy, use, modify, or distribute this
+% program and accompanying programs and documents for any purpose, provided
+% this copyright notice is retained and prominently displayed, along with
+% a note saying that the original programs are available from our
+% web page.
+% The programs and documents are distributed without any warranty, express or
+% implied.  As the programs were written for research purposes only, they have
+% not been tested to the degree that would be advisable in any important
+% application.  All use of these programs is entirely at the user's own risk.
+
+% This program fine-tunes an autoencoder with backpropagation.
+% Weights of the autoencoder are going to be saved in mnist_weights.mat
+% and trainig and test reconstruction errors in mnist_error.mat
+% You can also set maxepoch, default value is 200 as in our paper.  
+
+maxepoch=1;
+fprintf(1,'\nTraining discriminative model on MNIST by minimizing cross entropy error. \n');
+fprintf(1,'60 batches of 1000 cases each. \n');
+
+load mnistvhclassify
+load mnisthpclassify
+load mnisthp2classify
+load mnisthp3classify
+load mnisthp4classify
+load mnisthp5classify
+load mnisthp6classify
+load mnisthp7classify
+load mnisthp8classify
+load mnisthp9classify
+load mnisthp10classify
+load mnisthp11classify
+load mnisthp12classify
+load mnisthp13classify
+load mnisthp14classify
+load mnisthp15classify
+load mnisthp16classify
+load mnisthp17classify
+load mnisthp18classify
+load mnisthp19classify
+load mnisthp20classify
+load mnisthp21classify
+
+makebatches;
+[numcases numdims numbatches]=size(batchdata);
+N=numcases; 
+
+%%%% PREINITIALIZE WEIGHTS OF THE DISCRIMINATIVE MODEL%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+w1=[vishid; hidrecbiases];
+w2=[hidpen; penrecbiases];
+w3=[hidpen2; penrecbiases2];
+
+%%new
+w4=[hidpen3; penrecbiases3];
+w5=[hidpen4; penrecbiases4];
+w6=[hidpen5; penrecbiases5];
+w7=[hidpen6; penrecbiases6];
+w8=[hidpen7; penrecbiases7];
+w9=[hidpen8; penrecbiases8];
+w10=[hidpen9; penrecbiases9];
+w11=[hidpen10; penrecbiases10];
+w12=[hidpen11; penrecbiases11];
+w13=[hidpen12; penrecbiases12];
+w14=[hidpen13; penrecbiases13];
+w15=[hidpen14; penrecbiases14];
+w16=[hidpen15; penrecbiases15];
+w17=[hidpen16; penrecbiases16];
+w18=[hidpen17; penrecbiases17];
+w19=[hidpen18; penrecbiases18];
+w20=[hidpen19; penrecbiases19];
+w21=[hidpen20; penrecbiases20];
+w22=[hidpen21; penrecbiases21];
+
+w_class = 0.1*randn(size(w22,2)+1,10);
+ 
+
+%%%%%%%%%% END OF PREINITIALIZATIO OF WEIGHTS  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+l1=size(w1,1)-1;
+l2=size(w2,1)-1;
+l3=size(w3,1)-1;
+
+%%new
+l4=size(w4,1)-1;
+l5=size(w5,1)-1;
+l6=size(w6,1)-1;
+l7=size(w7,1)-1;
+l8=size(w8,1)-1;
+l9=size(w9,1)-1;
+l10=size(w10,1)-1;
+l11=size(w11,1)-1;
+l12=size(w12,1)-1;
+l13=size(w13,1)-1;
+l14=size(w14,1)-1;
+l15=size(w15,1)-1;
+l16=size(w16,1)-1;
+l17=size(w17,1)-1;
+l18=size(w18,1)-1;
+l19=size(w19,1)-1;
+l20=size(w20,1)-1;
+l21=size(w21,1)-1;
+l22=size(w22,1)-1;
+
+l23=size(w_class,1)-1;
+l24=10; 
+test_err=[];
+train_err=[];
+
+
+for epoch = 1:maxepoch
+
+%%%%%%%%%%%%%%%%%%%% COMPUTE TRAINING MISCLASSIFICATION ERROR %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+err=0; 
+err_cr=0;
+counter=0;
+[numcases numdims numbatches]=size(batchdata);
+N=numcases;
+ for batch = 1:numbatches
+  data = [batchdata(:,:,batch)];
+  target = [batchtargets(:,:,batch)];
+  data = [data ones(N,1)];
+  w1probs = 1./(1 + exp(-data*w1)); w1probs = [w1probs  ones(N,1)];
+  w2probs = 1./(1 + exp(-w1probs*w2)); w2probs = [w2probs ones(N,1)];
+  w3probs = 1./(1 + exp(-w2probs*w3)); w3probs = [w3probs  ones(N,1)];
+  
+  %%new
+  w4probs = 1./(1 + exp(-w3probs*w4)); w4probs = [w4probs  ones(N,1)];
+  w5probs = 1./(1 + exp(-w4probs*w5)); w5probs = [w5probs  ones(N,1)];
+  w6probs = 1./(1 + exp(-w5probs*w6)); w6probs = [w6probs  ones(N,1)];
+  w7probs = 1./(1 + exp(-w6probs*w7)); w7probs = [w7probs  ones(N,1)];
+  w8probs = 1./(1 + exp(-w7probs*w8)); w8probs = [w8probs  ones(N,1)];
+  w9probs = 1./(1 + exp(-w8probs*w9)); w9probs = [w9probs  ones(N,1)];
+  w10probs = 1./(1 + exp(-w9probs*w10)); w10probs = [w10probs  ones(N,1)];
+  w11probs = 1./(1 + exp(-w10probs*w11)); w11probs = [w11probs  ones(N,1)];
+  w12probs = 1./(1 + exp(-w11probs*w12)); w12probs = [w12probs  ones(N,1)];
+  w13probs = 1./(1 + exp(-w12probs*w13)); w13probs = [w13probs  ones(N,1)];
+  w14probs = 1./(1 + exp(-w13probs*w14)); w14probs = [w14probs  ones(N,1)];
+  w15probs = 1./(1 + exp(-w14probs*w15)); w15probs = [w15probs  ones(N,1)];
+  w16probs = 1./(1 + exp(-w15probs*w16)); w16probs = [w16probs  ones(N,1)];
+  w17probs = 1./(1 + exp(-w16probs*w17)); w17probs = [w17probs  ones(N,1)];
+  w18probs = 1./(1 + exp(-w17probs*w18)); w18probs = [w18probs  ones(N,1)];
+  w19probs = 1./(1 + exp(-w18probs*w19)); w19probs = [w19probs  ones(N,1)];
+  w20probs = 1./(1 + exp(-w19probs*w20)); w20probs = [w20probs  ones(N,1)];
+  w21probs = 1./(1 + exp(-w20probs*w21)); w21probs = [w21probs  ones(N,1)];
+  w22probs = 1./(1 + exp(-w21probs*w22)); w22probs = [w22probs  ones(N,1)];
+  
+  targetout = exp(w22probs*w_class);
+  targetout = targetout./repmat(sum(targetout,2),1,10);
+
+  [I J]=max(targetout,[],2);
+  [I1 J1]=max(target,[],2);
+  counter=counter+length(find(J==J1));
+  err_cr = err_cr- sum(sum( target(:,1:end).*log(targetout))) ;
+ end
+ train_err(epoch)=(numcases*numbatches-counter);
+ train_crerr(epoch)=err_cr/numbatches;
+
+%%%%%%%%%%%%%% END OF COMPUTING TRAINING MISCLASSIFICATION ERROR %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%% COMPUTE TEST MISCLASSIFICATION ERROR %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+err=0;
+err_cr=0;
+counter=0;
+[testnumcases testnumdims testnumbatches]=size(testbatchdata);
+N=testnumcases;
+for batch = 1:testnumbatches
+  data = [testbatchdata(:,:,batch)];
+  target = [testbatchtargets(:,:,batch)];
+  data = [data ones(N,1)];
+  w1probs = 1./(1 + exp(-data*w1)); w1probs = [w1probs  ones(N,1)];
+  w2probs = 1./(1 + exp(-w1probs*w2)); w2probs = [w2probs ones(N,1)];
+  w3probs = 1./(1 + exp(-w2probs*w3)); w3probs = [w3probs  ones(N,1)];
+  
+  %%new
+  w4probs = 1./(1 + exp(-w3probs*w4)); w4probs = [w4probs  ones(N,1)];
+  w5probs = 1./(1 + exp(-w4probs*w5)); w5probs = [w5probs  ones(N,1)];
+  w6probs = 1./(1 + exp(-w5probs*w6)); w6probs = [w6probs  ones(N,1)];
+  w7probs = 1./(1 + exp(-w6probs*w7)); w7probs = [w7probs  ones(N,1)];
+  w8probs = 1./(1 + exp(-w7probs*w8)); w8probs = [w8probs  ones(N,1)];
+  w9probs = 1./(1 + exp(-w8probs*w9)); w9probs = [w9probs  ones(N,1)];
+  w10probs = 1./(1 + exp(-w9probs*w10)); w10probs = [w10probs  ones(N,1)];
+  w11probs = 1./(1 + exp(-w10probs*w11)); w11probs = [w11probs  ones(N,1)];
+  w12probs = 1./(1 + exp(-w11probs*w12)); w12probs = [w12probs  ones(N,1)];
+  w13probs = 1./(1 + exp(-w12probs*w13)); w13probs = [w13probs  ones(N,1)];
+  w14probs = 1./(1 + exp(-w13probs*w14)); w14probs = [w14probs  ones(N,1)];
+  w15probs = 1./(1 + exp(-w14probs*w15)); w15probs = [w15probs  ones(N,1)];
+  w16probs = 1./(1 + exp(-w15probs*w16)); w16probs = [w16probs  ones(N,1)];
+  w17probs = 1./(1 + exp(-w16probs*w17)); w17probs = [w17probs  ones(N,1)];
+  w18probs = 1./(1 + exp(-w17probs*w18)); w18probs = [w18probs  ones(N,1)];
+  w19probs = 1./(1 + exp(-w18probs*w19)); w19probs = [w19probs  ones(N,1)];
+  w20probs = 1./(1 + exp(-w19probs*w20)); w20probs = [w20probs  ones(N,1)];
+  w21probs = 1./(1 + exp(-w20probs*w21)); w21probs = [w21probs  ones(N,1)];
+  w22probs = 1./(1 + exp(-w21probs*w22)); w22probs = [w22probs  ones(N,1)];
+  
+  targetout = exp(w22probs*w_class);
+  targetout = targetout./repmat(sum(targetout,2),1,10);
+
+  [I J]=max(targetout,[],2);
+  [I1 J1]=max(target,[],2);
+  counter=counter+length(find(J==J1));
+  err_cr = err_cr- sum(sum( target(:,1:end).*log(targetout))) ;
+end
+ test_err(epoch)=(testnumcases*testnumbatches-counter);
+ test_crerr(epoch)=err_cr/testnumbatches;
+ fprintf(1,'Before epoch %d Train # misclassified: %d (from %d). Test # misclassified: %d (from %d) \t \t \n',...
+            epoch,train_err(epoch),numcases*numbatches,test_err(epoch),testnumcases*testnumbatches);
+
+%%%%%%%%%%%%%% END OF COMPUTING TEST MISCLASSIFICATION ERROR %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ tt=0;
+ for batch = 1:numbatches/10
+ fprintf(1,'epoch %d batch %d\r',epoch,batch);
+
+%%%%%%%%%%% COMBINE 10 MINIBATCHES INTO 1 LARGER MINIBATCH %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ tt=tt+1; 
+ data=[];
+ targets=[]; 
+ for kk=1:10
+  data=[data 
+        batchdata(:,:,(tt-1)*10+kk)]; 
+  targets=[targets
+        batchtargets(:,:,(tt-1)*10+kk)];
+ end 
+
+%%%%%%%%%%%%%%% PERFORM CONJUGATE GRADIENT WITH 3 LINESEARCHES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  max_iter=3;
+
+  if epoch<6  % First update top-level weights holding other weights fixed. 
+    N = size(data,1);
+    XX = [data ones(N,1)];
+    w1probs = 1./(1 + exp(-XX*w1)); w1probs = [w1probs  ones(N,1)];
+    w2probs = 1./(1 + exp(-w1probs*w2)); w2probs = [w2probs ones(N,1)];
+    w3probs = 1./(1 + exp(-w2probs*w3)); w3probs = [w3probs  ones(N,1)];
+    
+    %%new
+    w4probs = 1./(1 + exp(-w3probs*w4)); w4probs = [w4probs  ones(N,1)];
+    w5probs = 1./(1 + exp(-w4probs*w5)); w5probs = [w5probs  ones(N,1)];
+    w6probs = 1./(1 + exp(-w5probs*w6)); w6probs = [w6probs  ones(N,1)];
+    w7probs = 1./(1 + exp(-w6probs*w7)); w7probs = [w7probs  ones(N,1)];
+    w8probs = 1./(1 + exp(-w7probs*w8)); w8probs = [w8probs  ones(N,1)];
+    w9probs = 1./(1 + exp(-w8probs*w9)); w9probs = [w9probs  ones(N,1)];
+    w10probs = 1./(1 + exp(-w9probs*w10)); w10probs = [w10probs  ones(N,1)];
+    w11probs = 1./(1 + exp(-w10probs*w11)); w11probs = [w11probs  ones(N,1)];
+    w12probs = 1./(1 + exp(-w11probs*w12)); w12probs = [w12probs  ones(N,1)];
+    w13probs = 1./(1 + exp(-w12probs*w13)); w13probs = [w13probs  ones(N,1)];
+    w14probs = 1./(1 + exp(-w13probs*w14)); w14probs = [w14probs  ones(N,1)];
+    w15probs = 1./(1 + exp(-w14probs*w15)); w15probs = [w15probs  ones(N,1)];
+    w16probs = 1./(1 + exp(-w15probs*w16)); w16probs = [w16probs  ones(N,1)];
+    w17probs = 1./(1 + exp(-w16probs*w17)); w17probs = [w17probs  ones(N,1)];
+    w18probs = 1./(1 + exp(-w17probs*w18)); w18probs = [w18probs  ones(N,1)];
+    w19probs = 1./(1 + exp(-w18probs*w19)); w19probs = [w19probs  ones(N,1)];
+    w20probs = 1./(1 + exp(-w19probs*w20)); w20probs = [w20probs  ones(N,1)];
+    w21probs = 1./(1 + exp(-w20probs*w21)); w21probs = [w21probs  ones(N,1)];
+    w22probs = 1./(1 + exp(-w21probs*w22)); %w22probs = [w22probs  ones(N,1)];
+
+    VV = [w_class(:)']';
+    Dim = [l23; l24];
+    [X, fX] = minimize(VV,'CG_CLASSIFY_INIT',max_iter,Dim,w22probs,targets);
+    w_class = reshape(X,l23+1,l24);
+
+  else
+    VV = [w1(:)' w2(:)' w3(:)' w4(:)' w5(:)' w6(:)' w7(:)' w8(:)' w9(:)' w10(:)' w11(:)' w12(:)' 
+    w13(:)' w14(:)' w15(:)' w16(:)' w17(:)' w18(:)' w19(:)' w20(:)' w21(:)' w22(:)'
+    w_class(:)']';
+    Dim = [l1; l2; l3; l4; l5; l6; l7; l8; l9; l10; l11; l12; l13; l14; l15; l16; l17; l18; l19; l20; 
+        l21; l22; l23; l24;];
+    [X, fX] = minimize(VV,'CG_CLASSIFY',max_iter,Dim,data,targets);
+
+    w1 = reshape(X(1:(l1+1)*l2),l1+1,l2);
+    xxx = (l1+1)*l2;
+    w2 = reshape(X(xxx+1:xxx+(l2+1)*l3),l2+1,l3);
+    xxx = xxx+(l2+1)*l3;
+    w3 = reshape(X(xxx+1:xxx+(l3+1)*l4),l3+1,l4);
+    xxx = xxx+(l3+1)*l4;
+    
+    %%new
+    w4 = reshape(X(xxx+1:xxx+(l4+1)*l5),l4+1,l5);
+    xxx = xxx+(l4+1)*l5;
+    w5 = reshape(X(xxx+1:xxx+(l5+1)*l6),l5+1,l6);
+    xxx = xxx+(l5+1)*l6;
+    w6 = reshape(X(xxx+1:xxx+(l6+1)*l7),l6+1,l7);
+    xxx = xxx+(l6+1)*l7;
+    w7 = reshape(X(xxx+1:xxx+(l7+1)*l8),l7+1,l8);
+    xxx = xxx+(l7+1)*l8;
+    w8 = reshape(X(xxx+1:xxx+(l8+1)*l9),l8+1,l9);
+    xxx = xxx+(l8+1)*l9;
+    w9 = reshape(X(xxx+1:xxx+(l9+1)*l10),l9+1,l10);
+    xxx = xxx+(l9+1)*l10;
+    w10 = reshape(X(xxx+1:xxx+(l10+1)*l11),l10+1,l11);
+    xxx = xxx+(l10+1)*l11;
+    w11 = reshape(X(xxx+1:xxx+(l11+1)*l12),l11+1,l12);
+    xxx = xxx+(l11+1)*l12;
+    w12 = reshape(X(xxx+1:xxx+(l12+1)*l13),l12+1,l13);
+    xxx = xxx+(l12+1)*l13;
+    w13 = reshape(X(xxx+1:xxx+(l13+1)*l14),l13+1,l14);
+    xxx = xxx+(l13+1)*l14;
+    w14 = reshape(X(xxx+1:xxx+(l14+1)*l15),l14+1,l15);
+    xxx = xxx+(l14+1)*l15;
+    w15 = reshape(X(xxx+1:xxx+(l15+1)*l16),l15+1,l16);
+    xxx = xxx+(l15+1)*l16;
+    w16 = reshape(X(xxx+1:xxx+(l16+1)*l17),l16+1,l17);
+    xxx = xxx+(l16+1)*l17;
+    w17 = reshape(X(xxx+1:xxx+(l17+1)*l18),l17+1,l18);
+    xxx = xxx+(l17+1)*l18;
+    w18 = reshape(X(xxx+1:xxx+(l18+1)*l19),l18+1,l19);
+    xxx = xxx+(l18+1)*l19;
+    w19 = reshape(X(xxx+1:xxx+(l19+1)*l20),l19+1,l20);
+    xxx = xxx+(l19+1)*l20;
+    w20 = reshape(X(xxx+1:xxx+(l20+1)*l21),l20+1,l21);
+    xxx = xxx+(l20+1)*l21;
+    w21 = reshape(X(xxx+1:xxx+(l21+1)*l22),l21+1,l22);
+    xxx = xxx+(l21+1)*l22;
+    w22 = reshape(X(xxx+1:xxx+(l22+1)*l23),l22+1,l23);
+    xxx = xxx+(l22+1)*l23;
+    
+    w_class = reshape(X(xxx+1:xxx+(l23+1)*l24),l23+1,l24);
+
+  end
+%%%%%%%%%%%%%%% END OF CONJUGATE GRADIENT WITH 3 LINESEARCHES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ end
+
+ save mnistclassify_weights w1 w2 w3 w4 w5 w6 w7 w8 w9 w10 w11 w12 w13 w14 w15 w16 w17 w18 w19 w20 w21 w22 w_class
+ save mnistclassify_error test_err test_crerr train_err train_crerr;
+
+end
+
+
+
